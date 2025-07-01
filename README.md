@@ -33,19 +33,56 @@ NOTIFI_SENDER_ID=your-sender-id
 ## Usage
 
 ```php
-use TeamInfinityDev\SmsNotify\Facades\SmsNotify;
+use TeamInfinityDev\SmsNotify\Services\NotifyService;
 
-// Send SMS to a single number
-SmsNotify::send('771234567', 'Your message here');
+$notifyService = new NotifyService();
 
-// Send SMS to multiple numbers
-SmsNotify::send(['771234567', '777654321'], 'Your message here');
+// Send to single number
+$response = $notifyService->send('771234567', 'Your message here');
 
-// Check balance
-$balance = SmsNotify::checkBalance();
+// Send to multiple numbers
+$response = $notifyService->send(['771234567', '772345678'], 'Your message here');
 
-// Get delivery report
-$report = SmsNotify::getDeliveryReport('message-id-123');
+// Response format
+[
+    'success' => true,
+    'data' => [
+        'message_id' => 'xxx',
+        'status' => 'queued'
+    ],
+    'status_code' => 200
+]
+```
+
+### Check Balance
+
+```php
+$balance = $notifyService->checkBalance();
+
+// Response format
+[
+    'success' => true,
+    'data' => [
+        'balance' => 100
+    ],
+    'status_code' => 200
+]
+```
+
+
+### Check Delivery Status
+
+```php
+$status = $notifyService->getDeliveryReport('message-id-here');
+
+// Response format
+[
+    'success' => true,
+    'data' => [
+        'status' => 'delivered'
+    ],
+    'status_code' => 200
+]
 ```
 
 ## Features
