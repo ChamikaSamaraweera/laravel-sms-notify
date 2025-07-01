@@ -3,7 +3,7 @@
     "description": "Laravel Notifi.lk SMS Gateway Integration",
     "type": "library",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "authors": [
         {
             "name": "TeamInfinity Dev",
@@ -13,11 +13,11 @@
     "require": {
         "php": "^8.0|^8.1|^8.2",
         "guzzlehttp/guzzle": "^7.0",
-        "illuminate/support": "^8.0|^9.0|^10.0"
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0|^7.0|^8.0",
-        "phpunit/phpunit": "^10.0",
+        "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+        "phpunit/phpunit": "^9.0|^10.0",
         "phpstan/phpstan": "^1.10"
     },
     "autoload": {
