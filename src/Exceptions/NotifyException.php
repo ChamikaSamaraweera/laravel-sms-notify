@@ -11,7 +11,7 @@ class NotifyException extends Exception
      */
     public static function invalidCredentials(): self
     {
-        return new self('Notifi.lk USER_ID and API_KEY are required. Please check your configuration.');
+        return new self('Notify.lk USER_ID and API_KEY are required. Please check your configuration.');
     }
 
     /**
@@ -35,7 +35,7 @@ class NotifyException extends Exception
      */
     public static function apiError(string $message, int $code = 0): self
     {
-        return new self("Notifi.lk API Error: {$message}", $code);
+        return new self("Notify.lk API Error: {$message}", $code);
     }
 
     /**
@@ -43,7 +43,7 @@ class NotifyException extends Exception
      */
     public static function invalidSenderId(string $senderId): self
     {
-        return new self("Invalid sender ID: {$senderId}. Sender ID must be registered with Notifi.lk");
+        return new self("Invalid sender ID: {$senderId}. Sender ID must be registered with Notify.lk");
     }
 
     /**
@@ -51,7 +51,7 @@ class NotifyException extends Exception
      */
     public static function networkError(string $message): self
     {
-        return new self("Network Error: Unable to connect to Notifi.lk API. {$message}");
+        return new self("Network Error: Unable to connect to Notify.lk API. {$message}");
     }
 
     /**

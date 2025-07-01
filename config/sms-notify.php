@@ -15,12 +15,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | HTTP Client Configuration
+    |--------------------------------------------------------------------------
+    */
+    'http' => [
+        'timeout' => env('NOTIFI_TIMEOUT', 30),
+        'connect_timeout' => env('NOTIFI_CONNECT_TIMEOUT', 10),
+        'verify' => env('NOTIFI_SSL_VERIFY', true), // Set to false for local development
+        'allow_redirects' => true,
+        'http_errors' => false, // Don't throw exceptions for HTTP error status codes
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Settings
     |--------------------------------------------------------------------------
     */
     'defaults' => [
         'country_code' => '94', // Sri Lanka
-        'retry_attempts' => 3,
-        'retry_delay' => 1, // seconds
+        'retry_attempts' => env('NOTIFI_RETRY_ATTEMPTS', 3),
+        'retry_delay' => env('NOTIFI_RETRY_DELAY', 1), // seconds
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Development/Testing Configuration
+    |--------------------------------------------------------------------------
+    */
+    'development' => [
+        'mock_responses' => env('NOTIFI_MOCK_RESPONSES', false),
+        'log_requests' => env('NOTIFI_LOG_REQUESTS', false),
     ]
 ];
