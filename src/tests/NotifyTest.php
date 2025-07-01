@@ -32,7 +32,7 @@ class NotifyTest extends TestCase
         ]);
         
         // Create service instance
-        $this->notifyService = new NotifiService();
+        $this->notifyService = new NotifyService();
         
         // Mock HTTP responses
         Http::fake([
@@ -114,7 +114,7 @@ class NotifyTest extends TestCase
         $this->expectException(\TeamInfinityDev\SmsNotify\Exceptions\NotifyException::class);
 
         config(['sms-notify.api.user_id' => null]);
-        new NotifiService();
+        new NotifyService();
     }
 
     protected function tearDown(): void
@@ -134,7 +134,7 @@ class NotifyTest extends TestCase
         $this->expectExceptionMessage('Notifi.lk USER_ID and API_KEY are required');
         
         config(['sms-notify.api.user_id' => null]);
-        new NotifiService();
+        new NotifyService();
     }
 
     /** @test */
@@ -144,5 +144,41 @@ class NotifyTest extends TestCase
         $this->expectExceptionMessage('Invalid phone number format');
         
         $this->notifyService->send('123', 'Test message');
+    }
+
+    /** @test */
+    public function it_checks_balance_before_sending()
+    {
+        Http::fake([
+            '*/balance' => Http::response([
+                'status' => 'success',
+                'data' => ['balance' => 0]
+            ], 200),
+        ]);
+
+        $response = $this->notifyService->send('771234567', 'Test message');
+        
+        $this->assertFalse($response['success']);
+        $this->assertEquals('Insufficient balance in your Notifi.lk account.', $response['error']);
+    }
+
+    /** @test */
+    public function it_sends_message_when_balance_is_sufficient()
+    {
+        Http::fake([
+            '*/balance' => Http::response([
+                'status' => 'success',
+                'data' => ['balance' => 10]
+            ], 200),
+            '*/send' => Http::response([
+                'status' => 'success',
+                'data' => ['message_id' => 'test-123']
+            ], 200),
+        ]);
+
+        $response = $this->notifyService->send('771234567', 'Test message');
+        
+        $this->assertTrue($response['success']);
+        $this->assertEquals(200, $response['status_code']);
     }
 }

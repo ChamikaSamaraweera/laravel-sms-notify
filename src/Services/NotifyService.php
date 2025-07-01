@@ -33,34 +33,8 @@ class NotifyService
      */
     protected function validateConfig()
     {
-        // In the validateConfig method
         if (empty($this->userId) || empty($this->apiKey)) {
-            throw NotifiException::invalidCredentials();
-        }
-
-        // When validating phone numbers
-        if (!$this->isValidPhoneNumber($number)) {
-            throw NotifiException::invalidPhoneNumber($number);
-        }
-
-        // When sending empty messages
-        if (empty($message)) {
-            throw NotifiException::emptyMessage();
-        }
-
-        // When handling API errors
-        if ($response->status() === 401) {
-            throw NotifiException::apiError('Invalid credentials', 401);
-        }
-
-        // When rate limited
-        if ($response->status() === 429) {
-            throw NotifiException::rateLimitExceeded();
-        }
-
-        // When checking balance
-        if ($balance <= 0) {
-            throw NotifiException::insufficientBalance();
+            throw NotifyException::invalidCredentials();
         }
     }
 
@@ -81,6 +55,40 @@ class NotifyService
         return $number;
     }
 
+     /**
+     * Check if there's sufficient balance before sending
+     *
+     * @param int $requiredMessages Number of messages to be sent
+     * @return bool
+     * @throws NotifyException
+     */
+    protected function hasSufficientBalance(int $requiredMessages = 1): bool
+    {
+        try {
+            $response = Http::get($this->baseUrl . '/balance', [
+                'user_id' => $this->userId,
+                'api_key' => $this->apiKey,
+            ]);
+
+            if (!$response->successful()) {
+                throw NotifyException::apiError('Failed to check balance', $response->status());
+            }
+
+            $data = $response->json();
+            $balance = $data['data']['balance'] ?? 0;
+
+            if ($balance < $requiredMessages) {
+                throw NotifyException::insufficientBalance();
+            }
+
+            return true;
+        } catch (NotifyException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw NotifyException::apiError('Failed to check balance: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Send SMS
      *
@@ -88,11 +96,27 @@ class NotifyService
      * @param string $message
      * @param array $options
      * @return array
+     * @throws NotifyException
      */
     public function send($to, string $message, array $options = []): array
     {
+        if (empty($message)) {
+            throw NotifyException::emptyMessage();
+        }
+
         $numbers = is_array($to) ? $to : [$to];
         $formattedNumbers = array_map([$this, 'formatNumber'], $numbers);
+        
+        // Check balance before sending
+        try {
+            $this->hasSufficientBalance(count($numbers));
+        } catch (NotifyException $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+                'status_code' => $e->getCode(),
+            ];
+        }
 
         $payload = array_merge([
             'user_id' => $this->userId,
@@ -106,10 +130,24 @@ class NotifyService
             $response = Http::retry($this->retryAttempts, $this->retryDelay * 1000)
                 ->post($this->baseUrl . '/send', $payload);
 
+            if ($response->status() === 401) {
+                throw NotifyException::apiError('Invalid credentials', 401);
+            }
+
+            if ($response->status() === 429) {
+                throw NotifyException::rateLimitExceeded();
+            }
+
             return [
                 'success' => $response->successful(),
                 'data' => $response->json(),
                 'status_code' => $response->status(),
+            ];
+        } catch (NotifyException $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+                'status_code' => $e->getCode(),
             ];
         } catch (\Exception $e) {
             return [
@@ -119,6 +157,7 @@ class NotifyService
             ];
         }
     }
+
 
     /**
      * Check balance
