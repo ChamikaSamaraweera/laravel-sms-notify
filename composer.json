@@ -21,21 +21,21 @@
     },
     "autoload": {
         "psr-4": {
-            "TeamInfinity\\SmsNotify\\": "src/"
+            "TeamInfinityDev\\SmsNotify\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TeamInfinity\\SmsNotify\\Tests\\": "tests/"
+            "TeamInfinityDev\\SmsNotify\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "TeamInfinity\\SmsNotify\\SmsNotifyServiceProvider"
+                "TeamInfinityDev\\SmsNotify\\SmsNotifyServiceProvider"
             ],
             "aliases": {
-                "SmsNotify": "TeamInfinity\\SmsNotify\\Facades\\SmsNotify"
+                "SmsNotify": "TeamInfinityDev\\SmsNotify\\Facades\\SmsNotify"
             }
         }
     },
