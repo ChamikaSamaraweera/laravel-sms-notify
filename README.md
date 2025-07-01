@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/teaminfinitydev/laravel-sms-notify.svg?style=flat-square)](https://packagist.org/packages/teaminfinitydev/laravel-sms-notify)
 [![GitHub Tests Action Status](https://github.com/teaminfinitydev/laravel-sms-notify/actions/workflows/tests.yml/badge.svg)](https://github.com/teaminfinitydev/laravel-sms-notify/actions/workflows/tests.yml)
-
 [![Total Downloads](https://img.shields.io/packagist/dt/teaminfinitydev/laravel-sms-notify.svg?style=flat-square)](https://packagist.org/packages/teaminfinitydev/laravel-sms-notify)
 
 Laravel package for Notifi.lk SMS Gateway Integration
