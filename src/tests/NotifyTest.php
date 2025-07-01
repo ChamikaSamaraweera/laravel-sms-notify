@@ -6,6 +6,7 @@ use Orchestra\Testbench\TestCase;
 use TeamInfinityDev\SmsNotify\Services\NotifiService;
 use TeamInfinityDev\SmsNotify\SmsNotifyServiceProvider;
 use Illuminate\Support\Facades\Http;
+use TeamInfinityDev\SmsNotify\Exceptions\NotifyException;
 
 class NotifyTest extends TestCase
 {
@@ -110,7 +111,7 @@ class NotifyTest extends TestCase
     /** @test */
     public function it_validates_required_config()
     {
-        $this->expectException(\TeamInfinityDev\SmsNotify\Exceptions\NotifiException::class);
+        $this->expectException(\TeamInfinityDev\SmsNotify\Exceptions\NotifyException::class);
 
         config(['sms-notify.api.user_id' => null]);
         new NotifiService();
@@ -124,5 +125,24 @@ class NotifyTest extends TestCase
         });
 
         parent::tearDown();
+    }
+
+    /** @test */
+    public function it_throws_exception_for_invalid_credentials()
+    {
+        $this->expectException(NotifyException::class);
+        $this->expectExceptionMessage('Notifi.lk USER_ID and API_KEY are required');
+        
+        config(['sms-notify.api.user_id' => null]);
+        new NotifiService();
+    }
+
+    /** @test */
+    public function it_throws_exception_for_invalid_phone_number()
+    {
+        $this->expectException(NotifyException::class);
+        $this->expectExceptionMessage('Invalid phone number format');
+        
+        $this->notifyService->send('123', 'Test message');
     }
 }

@@ -3,7 +3,7 @@
 namespace TeamInfinityDev\SmsNotify\Services;
 
 use Illuminate\Support\Facades\Http;
-use TeamInfinityDev\SmsNotify\Exceptions\NotifiException;
+use TeamInfinityDev\SmsNotify\Exceptions\NotifyException;
 
 class NotifyService
 {
@@ -29,12 +29,38 @@ class NotifyService
     /**
      * Validate configuration
      *
-     * @throws NotifiException
+     * @throws NotifyException
      */
     protected function validateConfig()
     {
+        // In the validateConfig method
         if (empty($this->userId) || empty($this->apiKey)) {
-            throw new NotifiException('Notifi.lk USER_ID and API_KEY are required');
+            throw NotifiException::invalidCredentials();
+        }
+
+        // When validating phone numbers
+        if (!$this->isValidPhoneNumber($number)) {
+            throw NotifiException::invalidPhoneNumber($number);
+        }
+
+        // When sending empty messages
+        if (empty($message)) {
+            throw NotifiException::emptyMessage();
+        }
+
+        // When handling API errors
+        if ($response->status() === 401) {
+            throw NotifiException::apiError('Invalid credentials', 401);
+        }
+
+        // When rate limited
+        if ($response->status() === 429) {
+            throw NotifiException::rateLimitExceeded();
+        }
+
+        // When checking balance
+        if ($balance <= 0) {
+            throw NotifiException::insufficientBalance();
         }
     }
 
