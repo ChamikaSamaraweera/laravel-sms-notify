@@ -1,0 +1,38 @@
+{
+    "name": "teaminfinitydev/laravel-sms-notify",
+    "description": "Laravel Notifi.lk SMS Gateway Integration",
+    "type": "library",
+    "authors": [
+        {
+            "name": "TeamInfinity",
+            "email": "info@teaminfinity.pro"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Teaminfinitydev\\LaravelSmsNotify\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.0",
+        "illuminate/support": "^10.0|^11.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "phpunit/phpunit": "^10.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Teaminfinitydev\\LaravelSmsNotify\\NotifiServiceProvider"
+            ],
+            "aliases": {
+                "LaravelSmsNotify": "Teaminfinitydev\\LaravelSmsNotify\\Facades\\LaravelSmsNotify"
+            }
+        }
+    },
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
