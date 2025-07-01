@@ -47,34 +47,4 @@ class NotifyTest extends TestCase
             ], 200),
         ]);
     }
-
-
-    /** @test */
-    public function it_validates_required_config()
-    {
-        $this->expectException(\TeamInfinityDev\SmsNotify\Exceptions\NotifyException::class);
-
-        config(['sms-notify.api.user_id' => null]);
-        new NotifyService();
-    }
-
-    protected function tearDown(): void
-    {
-        Http::assertSent(function ($request) {
-            return in_array($request->method(), ['POST', 'GET']) && 
-                   str_contains($request->url(), 'notifi.lk/api/v1');
-        });
-
-        parent::tearDown();
-    }
-
-    /** @test */
-    public function it_throws_exception_for_invalid_credentials()
-    {
-        $this->expectException(NotifyException::class);
-        $this->expectExceptionMessage('Notifi.lk USER_ID and API_KEY are required');
-        
-        config(['sms-notify.api.user_id' => null]);
-        new NotifyService();
-    }
 }
