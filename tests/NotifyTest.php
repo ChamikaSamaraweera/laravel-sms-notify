@@ -23,30 +23,6 @@ class NotifyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        // Set test configuration
-        config([
-            'sms-notify.api.user_id' => 'test-user',
-            'sms-notify.api.api_key' => 'test-key',
-            'sms-notify.api.sender_id' => 'NotifyDemo',
-            'sms-notify.api.base_url' => 'https://notifi.lk/api/v1',
-        ]);
-        
-        // Create service instance
-        $this->notifyService = new NotifyService();
-        
-        // Mock HTTP responses
-        Http::fake([
-            'notifi.lk/api/v1/send' => Http::response([
-                'status' => 'success',
-                'message' => 'Message sent successfully',
-                'data' => ['message_id' => 'test-123']
-            ], 200),
-            'notifi.lk/api/v1/balance' => Http::response([
-                'status' => 'success',
-                'data' => ['balance' => 100]
-            ], 200),
-        ]);
     }
 
     /** @test */
