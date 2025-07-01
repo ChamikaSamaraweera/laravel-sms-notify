@@ -1,6 +1,6 @@
 {
     "name": "teaminfinitydev/laravel-sms-notify",
-    "description": "Laravel Notifi.lk SMS Gateway Integration",
+    "description": "Laravel Notify.lk SMS Gateway Integration",
     "type": "library",
     "license": "MIT",
     "version": "1.0.2",
