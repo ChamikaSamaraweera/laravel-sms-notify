@@ -108,10 +108,10 @@ jobs:
   security:
     runs-on: ubuntu-latest
     name: Security Check
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Security Check
-        uses: symfonycorp/security-checker-action@v5
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+      - name: Composer Audit
+        run: composer audit
