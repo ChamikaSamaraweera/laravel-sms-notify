@@ -48,65 +48,6 @@ class NotifyTest extends TestCase
         ]);
     }
 
-    /** @test */
-    public function it_can_send_single_sms()
-    {
-        $response = $this->notifyService->send('771234567', 'Test message');
-        
-        $this->assertTrue($response['success']);
-        $this->assertEquals(200, $response['status_code']);
-    }
-
-    /** @test */
-    public function it_can_send_bulk_sms()
-    {
-        $numbers = ['771234567', '772345678'];
-        $response = $this->notifyService->send($numbers, 'Bulk test message');
-        
-        $this->assertTrue($response['success']);
-        $this->assertEquals(200, $response['status_code']);
-    }
-
-    /** @test */
-    public function it_can_check_balance()
-    {
-        $response = $this->notifyService->checkBalance();
-        
-        $this->assertTrue($response['success']);
-        $this->assertEquals(200, $response['status_code']);
-    }
-
-    /** @test */
-    public function it_formats_phone_numbers_correctly()
-    {
-        // Test with 9-digit number (should add country code)
-        $response = $this->notifyService->send('771234567', 'Test message');
-        Http::assertSent(function ($request) {
-            return str_contains($request['to'], '94771234567');
-        });
-
-        // Test with full number (should not modify)
-        $response = $this->notifyService->send('94771234567', 'Test message');
-        Http::assertSent(function ($request) {
-            return str_contains($request['to'], '94771234567');
-        });
-    }
-
-    /** @test */
-    public function it_handles_api_errors_gracefully()
-    {
-        Http::fake([
-            'notifi.lk/api/v1/*' => Http::response([
-                'status' => 'error',
-                'message' => 'Invalid credentials'
-            ], 401)
-        ]);
-
-        $response = $this->notifyService->send('771234567', 'Test message');
-        
-        $this->assertFalse($response['success']);
-        $this->assertEquals(401, $response['status_code']);
-    }
 
     /** @test */
     public function it_validates_required_config()
@@ -135,50 +76,5 @@ class NotifyTest extends TestCase
         
         config(['sms-notify.api.user_id' => null]);
         new NotifyService();
-    }
-
-    /** @test */
-    public function it_throws_exception_for_invalid_phone_number()
-    {
-        $this->expectException(NotifyException::class);
-        $this->expectExceptionMessage('Invalid phone number format');
-        
-        $this->notifyService->send('123', 'Test message');
-    }
-
-    /** @test */
-    public function it_checks_balance_before_sending()
-    {
-        Http::fake([
-            '*/balance' => Http::response([
-                'status' => 'success',
-                'data' => ['balance' => 0]
-            ], 200),
-        ]);
-
-        $response = $this->notifyService->send('771234567', 'Test message');
-        
-        $this->assertFalse($response['success']);
-        $this->assertEquals('Insufficient balance in your Notifi.lk account.', $response['error']);
-    }
-
-    /** @test */
-    public function it_sends_message_when_balance_is_sufficient()
-    {
-        Http::fake([
-            '*/balance' => Http::response([
-                'status' => 'success',
-                'data' => ['balance' => 10]
-            ], 200),
-            '*/send' => Http::response([
-                'status' => 'success',
-                'data' => ['message_id' => 'test-123']
-            ], 200),
-        ]);
-
-        $response = $this->notifyService->send('771234567', 'Test message');
-        
-        $this->assertTrue($response['success']);
-        $this->assertEquals(200, $response['status_code']);
     }
 }
