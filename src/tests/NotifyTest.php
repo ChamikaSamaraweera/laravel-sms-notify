@@ -3,14 +3,14 @@
 namespace TeamInfinityDev\SmsNotify\Tests;
 
 use Orchestra\Testbench\TestCase;
-use TeamInfinityDev\SmsNotify\Services\NotifiService;
+use TeamInfinityDev\SmsNotify\Services\NotifyService;
 use TeamInfinityDev\SmsNotify\SmsNotifyServiceProvider;
 use Illuminate\Support\Facades\Http;
 use TeamInfinityDev\SmsNotify\Exceptions\NotifyException;
 
 class NotifyTest extends TestCase
 {
-    protected NotifiService $notifyService;
+    protected NotifyService $notifyService;
 
     protected function getPackageProviders($app): array
     {
