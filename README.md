@@ -36,7 +36,7 @@ NOTIFI_API_KEY=your-api-key
 NOTIFI_SENDER_ID=your-sender-id
 
 # Optional Configuration
-NOTIFI_API_URL=https://notifi.lk/api/v1
+NOTIFI_API_URL=https://app.notify.lk/api/v1
 NOTIFI_TIMEOUT=30
 NOTIFI_CONNECT_TIMEOUT=10
 NOTIFI_SSL_VERIFY=true

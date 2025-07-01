@@ -10,7 +10,7 @@ return [
         'user_id' => env('NOTIFI_USER_ID'),
         'api_key' => env('NOTIFI_API_KEY'),
         'sender_id' => env('NOTIFI_SENDER_ID', 'NotifyDemo'),
-        'base_url' => env('NOTIFI_API_URL', 'https://notifi.lk/api/v1'),
+        'base_url' => env('NOTIFI_API_URL', 'https://app.notify.lk/api/v1'),
     ],
 
     /*
