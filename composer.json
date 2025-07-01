@@ -3,7 +3,7 @@
     "description": "Laravel Notifi.lk SMS Gateway Integration",
     "type": "library",
     "license": "MIT",
-    "version": "1.1.0",
+    "version": "1.0.1",
     "authors": [
         {
             "name": "TeamInfinity Dev",

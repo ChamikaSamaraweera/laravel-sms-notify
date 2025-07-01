@@ -1,10 +1,10 @@
 # Laravel SMS Notify
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/teaminfinitydev/laravel-sms-notify.svg?style=flat-square)](https://packagist.org/packages/teaminfinitydev/laravel-sms-notify)
-[![GitHub Tests Action Status](https://github.com/teaminfinitydev/laravel-sms-notify/actions/workflows/tests.yml/badge.svg)](https://github.com/teaminfinitydev/laravel-sms-notify/actions/workflows/tests.yml)
+[![GitHub Tests Action Status](https://github.com/teaminfinitydev/laravel-sms-notify/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/teaminfinitydev/laravel-sms-notify/actions/workflows/tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/teaminfinitydev/laravel-sms-notify.svg?style=flat-square)](https://packagist.org/packages/teaminfinitydev/laravel-sms-notify)
 
-Laravel package for Notifi.lk SMS Gateway Integration
+Laravel package for Notify.lk SMS Gateway Integration
 
 ## Installation
 
@@ -54,43 +54,11 @@ $response = $notifyService->send(['771234567', '772345678'], 'Your message here'
 ]
 ```
 
-### Check Balance
-
-```php
-$balance = $notifyService->checkBalance();
-
-// Response format
-[
-    'success' => true,
-    'data' => [
-        'balance' => 100
-    ],
-    'status_code' => 200
-]
-```
-
-
-### Check Delivery Status
-
-```php
-$status = $notifyService->getDeliveryReport('message-id-here');
-
-// Response format
-[
-    'success' => true,
-    'data' => [
-        'status' => 'delivered'
-    ],
-    'status_code' => 200
-]
-```
 
 ## Features
 
 - Send SMS to single or multiple numbers
 - Automatic phone number formatting
-- Check account balance
-- Get delivery reports
 - Configurable retry attempts
 - Exception handling
 - Comprehensive testing

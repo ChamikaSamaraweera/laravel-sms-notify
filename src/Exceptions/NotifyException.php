@@ -62,13 +62,6 @@ class NotifyException extends Exception
         return new self('API rate limit exceeded. Please try again later.');
     }
 
-    /**
-     * Create a new exception for insufficient balance.
-     */
-    public static function insufficientBalance(): self
-    {
-        return new self('Insufficient balance in your Notifi.lk account.');
-    }
 
     /**
      * Create a new exception for invalid message ID.

@@ -55,39 +55,6 @@ class NotifyService
         return $number;
     }
 
-     /**
-     * Check if there's sufficient balance before sending
-     *
-     * @param int $requiredMessages Number of messages to be sent
-     * @return bool
-     * @throws NotifyException
-     */
-    protected function hasSufficientBalance(int $requiredMessages = 1): bool
-    {
-        try {
-            $response = Http::get($this->baseUrl . '/balance', [
-                'user_id' => $this->userId,
-                'api_key' => $this->apiKey,
-            ]);
-
-            if (!$response->successful()) {
-                throw NotifyException::apiError('Failed to check balance', $response->status());
-            }
-
-            $data = $response->json();
-            $balance = $data['data']['balance'] ?? 0;
-
-            if ($balance < $requiredMessages) {
-                throw NotifyException::insufficientBalance();
-            }
-
-            return true;
-        } catch (NotifyException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw NotifyException::apiError('Failed to check balance: ' . $e->getMessage());
-        }
-    }
 
     /**
      * Send SMS
@@ -107,17 +74,6 @@ class NotifyService
         $numbers = is_array($to) ? $to : [$to];
         $formattedNumbers = array_map([$this, 'formatNumber'], $numbers);
         
-        // Check balance before sending
-        try {
-            $this->hasSufficientBalance(count($numbers));
-        } catch (NotifyException $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage(),
-                'status_code' => $e->getCode(),
-            ];
-        }
-
         $payload = array_merge([
             'user_id' => $this->userId,
             'api_key' => $this->apiKey,
@@ -158,60 +114,4 @@ class NotifyService
         }
     }
 
-
-    /**
-     * Check balance
-     *
-     * @return array
-     */
-    public function checkBalance(): array
-    {
-        try {
-            $response = Http::get($this->baseUrl . '/balance', [
-                'user_id' => $this->userId,
-                'api_key' => $this->apiKey,
-            ]);
-
-            return [
-                'success' => $response->successful(),
-                'data' => $response->json(),
-                'status_code' => $response->status(),
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage(),
-                'status_code' => $e->getCode(),
-            ];
-        }
-    }
-
-    /**
-     * Get delivery report
-     *
-     * @param string $messageId
-     * @return array
-     */
-    public function getDeliveryReport(string $messageId): array
-    {
-        try {
-            $response = Http::get($this->baseUrl . '/status', [
-                'user_id' => $this->userId,
-                'api_key' => $this->apiKey,
-                'message_id' => $messageId,
-            ]);
-
-            return [
-                'success' => $response->successful(),
-                'data' => $response->json(),
-                'status_code' => $response->status(),
-            ];
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage(),
-                'status_code' => $e->getCode(),
-            ];
-        }
-    }
 }
